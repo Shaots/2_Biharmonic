@@ -56,8 +56,8 @@ for T=1:nt
 %=============================================================================
     if ( isequal(T,Tver) & check==1 )
         clc;
-        disp(sprintf('Randomly selected element for verification')); 
-        disp(sprintf('\n\nVerify continuity (the center of mass)'));        
+        fprintf('Randomly selected element for verification\n'); 
+        fprintf('\n\nVerify continuity (the center of mass)\n');        
         LAM= [1/3,1/3,1/3]
         PVAL= [0,0,0];
         for i=1:3
@@ -65,9 +65,9 @@ for T=1:nt
             disp(sprintf('\nsubtriangle %d: P= %g, Px= %g, Py= %g',i,PVAL)); 
         end        
 
-        disp(sprintf('\n\nVerify that laplacian P is an element of P^1'));
+        fprintf('\n\nVerify that laplacian P is an element of P^1\n');
         for i=1:3
-            disp(sprintf('\nsubtriangle %d:',i));        
+            fprintf('\nsubtriangle %d:\n',i);        
             [LAMout1,Xout,Yout]= HCT_LAMin2out(X,Y,[1,0,0],i);
             [LAMout2,Xout,Yout]= HCT_LAMin2out(X,Y,[0,1,0],i);
             [LAMout3,Xout,Yout]= HCT_LAMin2out(X,Y,[0,0,1],i);
@@ -77,8 +77,8 @@ for T=1:nt
             [PVAL,DelP3]= HCT_PVALi(X,Y, LCOEFV(i,1:10), i, LAMout3);    
             [PVAL,DelPC]= HCT_PVALi(X,Y, LCOEFV(i,1:10), i, LAMoutC);        
             MeanDelP= (DelP1 + DelP2 + DelP3)/3;
-            disp(sprintf('\n%g - mean of values in the vertices',MeanDelP));             
-            disp(sprintf('\n%g - value in the center',DelPC));                         
+            fprintf('\n%g - mean of values in the vertices\n',MeanDelP);             
+            fprintf('\n%g - value in the center\n',DelPC);                         
         end 
 
         pause
@@ -86,17 +86,17 @@ for T=1:nt
         order= [1,2,3,1,2];
         PVAL1= [0,0,0];
         PVAL2= [0,0,0];
-        disp(sprintf('\n\nVerify continuity:'));        
+        fprintf('\n\nVerify continuity:\n');        
         for i=1:3            
-            disp(sprintf('\n\nLocal vertex i= %d',i));
+            fprintf('\n\nLocal vertex i= %d\n',i);
             LAM([order(i),order(i+1),order(i+2)])= [1,0,0]
             [PVAL1,DelP1]= HCT_PVALi(X,Y, LCOEFV(order(i+1),1:10), order(i+1), LAM);
             [PVAL2,DelP2]= HCT_PVALi(X,Y, LCOEFV(order(i+2),1:10), order(i+2), LAM);
             disp(sprintf('\nP(i+1)= %g, P(i+1)x= %g, P(i+1)y= %g',PVAL1));             
             disp(sprintf('\nP(i+2)= %g, P(i+2)x= %g, P(i+2)y= %g',PVAL2));            
-            disp(sprintf('\n     V= %g,      Vx= %g,      Vy= %g',VT(i),VxT(i),VyT(i)));
+            fprintf('\n     V= %g,      Vx= %g,      Vy= %g\n',VT(i),VxT(i),VyT(i));
            
-            disp(sprintf('\n\nPoint on common edge of %d and %d subtriangles',order(i+1),order(i+2)));
+            fprintf('\n\nPoint on common edge of %d and %d subtriangles\n',order(i+1),order(i+2));
             LAM([order(i),order(i+1),order(i+2)])= [0.83,0.075,0.075]
             [PVAL1,DelP1]= HCT_PVALi(X,Y, LCOEFV(order(i+1),1:10), order(i+1), LAM);
             [PVAL2,DelP2]= HCT_PVALi(X,Y, LCOEFV(order(i+2),1:10), order(i+2), LAM);           
@@ -105,7 +105,7 @@ for T=1:nt
             pause
             clc;
         end
-        disp(sprintf('verification is done: continue'));
+        fprintf('verification is done: continue\n');
     end       
 %=============================================================================
 end

@@ -1,6 +1,6 @@
  function prnf2D( p,e,t, f2D, ftitle, fcolormap, fcolorbar )
  
- if ( length(f2D)==1 )                                                   
+ if ( isscalar(f2D) )                                                   
      f2D= f2D*ones(1,size(t,2));
  end    
 
