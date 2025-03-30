@@ -2,3 +2,4 @@ __pycache__
 venv/
 *.txt
 *.asv
+_Results_ECCOMAS04/*
