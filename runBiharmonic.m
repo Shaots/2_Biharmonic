@@ -10,7 +10,7 @@ diary(strcat('DEMExRep', datestr(datenum(clock),'yyyymmddTHHMMSS'), '.txt'));
 beta1= 1;
 beta2= 1;
 % for unit square i.e any domain inside of unit square can be used
-Comega= 1/(sqrt(2)*pi)
+Comega = 1/(sqrt(2)*pi)
 
 %============================================================================
 disp('----- Step 1: Selection of the domain - the unit square');
@@ -28,11 +28,11 @@ b='unsquareb';
 
 disp('----- Step 2: Selection of the exact solution U and F');
 [mfile, mpath] = uigetfile('*.m', 'open file with corresponding data');
-file= strcat(mpath,mfile)
-feval('run', file);
+file = strcat(mpath,mfile)
+run(file);
              
-disp(sprintf('\ntypes of initial refinement: longest(times) - regular(times):'));
-disp(sprintf('\ncases 1) 8-0, 2) 0-4, 3) 10-0'));
+fprintf('\ntypes of initial refinement: longest(times) - regular(times):\n');
+fprintf('\ncases 1) 8-0, 2) 0-4, 3) 10-0\n');
 tref= input('input a type of refinement: ');
 
 switch(tref)
@@ -51,12 +51,16 @@ switch(tref)
 end        
 
 [p,e,t]=initmesh(g,'Hmax',inf);
+pdemesh(p,e,t);
+
+
 for i=1:Nlon
     [p,e,t]=refinemesh(g,p,e,t,'longest');
 end    
 for i=1:Nreg
     [p,e,t]=refinemesh(g,p,e,t,'regular');
 end    
+pdemesh(p,e,t);
 
 refinement= 0;
 RelErr= 100;
@@ -65,7 +69,7 @@ RelErr= 100;
 while ( RelErr > 4 ) 
     np= size(p,2);
     nt= size(t,2);    
-    disp(sprintf('\nREFINEMENT %d -> mesh: %d nodes, %d elements',refinement,np,nt));
+    fprintf('\nREFINEMENT %d -> mesh: %d nodes, %d elements\n',refinement,np,nt);
     
 %  A1,A2,A3 are parameters in the exact solution
 %  are defined inside of selected example
@@ -81,7 +85,7 @@ while ( RelErr > 4 )
         Delu(i,1)= LaplU(x,y,A1,A2,A3);
         Fp(i,1)= F(x,y,A1,A2,A3);                                                     
     end
-    disp(sprintf('\nTIME:   %g sec - calc. of inline functions',etime(clock,timeIn)));      
+    fprintf('\nTIME:   %g sec - calc. of inline functions\n',etime(clock,timeIn));      
     
 % approximate solution is an interpolant of u
     V= u;
@@ -100,7 +104,7 @@ while ( RelErr > 4 )
 % flag= 0 means "no verification"
     timeHCT= clock;                                          
     [DelU,DelV,intDelVPhi]= HCT_DEL_UV(p,t,LaplU,A1,A2,A3,V,GVx,GVy,0);
-    disp(sprintf('TIME:   %g sec - running of HCT_DEL_UV',etime(clock,timeHCT)));    
+    fprintf('TIME:   %g sec - running of HCT_DEL_UV\n',etime(clock,timeHCT));    
     if ( beta2<0.01 ) beta2= 0.01; end
             timeKs= clock;                                          
             A=1;
@@ -110,48 +114,48 @@ while ( RelErr > 4 )
             [W]=assempde(b,p,e,t,A,a,Fks);
             KS= -W(np+1:2*np);   
             [KSx,KSy]= pdegrad(p,t,KS);
-            disp(sprintf('\nTIME:   %g sec - calc. of k*',etime(clock,timeKs)));
+            fprintf('\nTIME:   %g sec - calc. of k*\n',etime(clock,timeKs));
   
             timeYs= clock;                                          
             [YS1,YS2]= DEMgetYs(p,e,t,KSx,KSy,-f,Comega,beta2);
-            disp(sprintf('TIME:   %g sec - calc. of y*',etime(clock,timeYs)));
+            fprintf('TIME:   %g sec - calc. of y*\n',etime(clock,timeYs));
     
     figure
     prnf2D( p,e,t, 0,sprintf('Mesh %d',refinement), 'white', 'off' );
 
 %============================================================================
-    disp(sprintf('\n----- Step 3: Calculation of loads\n'));
+    fprintf('\n----- Step 3: Calculation of loads\n\n');
     % calculation of loads to the energy norm of error and
     % to terms of DEM without constants beta_i
     timeLDS= clock;
     [Et,Nt,Dt,Rt1,Rt2]= HCT_INTschP2(p,t,f,DelU,DelV,KS,KSx,KSy,YS1,YS2);
-    disp(sprintf('TIME:   %g sec - calc. of loads\n',etime(clock,timeLDS)));    
+    fprintf('TIME:   %g sec - calc. of loads\n\n',etime(clock,timeLDS));    
 
 %============================================================================
-    disp(sprintf('\n----- Step 4: Selection of the optimal beta_1 and beta_2\n'));
+    fprintf('\n----- Step 4: Selection of the optimal beta_1 and beta_2\n\n');
     Ng= sqrt(sum(Nt));
     Eg= sqrt(sum(Et));
     RelErr= Eg/Ng * 100;
-    disp(sprintf('%11.10f - norm of e',Eg));
-    disp(sprintf('%11.10f - norm of u',Ng));
-    disp(sprintf('%4.2f - relative error\n',RelErr));
+    fprintf('%11.10f - norm of e\n',Eg);
+    fprintf('%11.10f - norm of u\n',Ng);
+    fprintf('%4.2f - relative error\n\n',RelErr);
 
     Dg= sqrt(sum(Dt));
     R1g= sqrt(sum(Rt1));
     R2g= sqrt(sum(Rt2));
 
-    disp(sprintf('initial values:   beta1= %6.5f  beta2= %6.5f',beta1,beta2));
+    fprintf('initial values:   beta1= %6.5f  beta2= %6.5f\n',beta1,beta2);
     beta1= Comega*(R1g + Comega*R2g)/Dg;
     beta2= Comega* R2g/R1g;
-    disp(sprintf('optimal values:   beta1= %6.5f  beta2= %6.5f\n',beta1,beta2));
+    fprintf('optimal values:   beta1= %6.5f  beta2= %6.5f\n\n',beta1,beta2);
 
 
     Term= [Dg, Comega*R1g, Comega^2*R2g];
     OptEst= Term(1) + Term(2) + Term(3);
     Ieff= OptEst/Eg;
-    disp(sprintf('%11.10f - norm of e',Eg));
-    disp(sprintf('%11.10f - DEM',OptEst));
-    disp(sprintf('%6.5f - eff. index',Ieff));    
+    fprintf('%11.10f - norm of e\n',Eg);
+    fprintf('%11.10f - DEM\n',OptEst);
+    fprintf('%6.5f - eff. index\n',Ieff);    
     disp(sprintf('\nterms: \n %11.10f \n %11.10f \n %11.10f',Term(1:3)));
 
     color1= 0;
@@ -186,7 +190,7 @@ while ( RelErr > 4 )
     
 %============================================================================
     if ( refinement==0 )
-        disp(sprintf('\n----- Step 5: Figures'));        
+        fprintf('\n----- Step 5: Figures\n');        
         figure
         subplot (2,2,1);
         prnf3D( p,t, u, 'u', 'cool');      

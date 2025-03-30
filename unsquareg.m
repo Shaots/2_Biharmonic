@@ -16,7 +16,7 @@ function [x,y]=unsquareg(bs,s)
 
 nbs=4;
 
-if nargin==0,
+if nargin==0
   x=nbs; % number of boundary segments
   return
 end

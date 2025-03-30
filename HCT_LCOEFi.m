@@ -18,7 +18,7 @@ wy= [Wy(order(i:i+2))];
 
 % 1x9  global degrees of freedom
 GDOF= [w(1),w(2),w(3),wx(1),wy(1),wx(2),wy(2),wx(3),wy(3)];
-                          
+
 % D - tridiagonal matrix that converts GDOF to LDOF
 D= diag([1,1,1, x(3)-x(1),y(2)-y(1), x(1)-x(2),y(3)-y(2), x(2)-x(3),y(1)-y(3)], 0);
 D= D + diag([0,0,0, x(2)-x(1),0, x(3)-x(2),0, x(1)-x(3)],  1);

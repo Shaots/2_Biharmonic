@@ -95,7 +95,7 @@
     clear FVx FVy FYS1x FYS2y;
     
  %   condM= condest(MDEM_POI);
-    disp(sprintf('TIME:   %g sec - assembling',etime(clock,timeASSEM)));
+    fprintf('TIME:   %g sec - assembling\n',etime(clock,timeASSEM));
  %   disp(sprintf('CONDITION NUMBER FOR MATRIX OF SYSTEM %f',condM));    
 
     X= MDEM_POI\FDEM_POI;
