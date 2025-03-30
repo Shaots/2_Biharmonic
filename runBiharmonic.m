@@ -51,12 +51,16 @@ switch(tref)
 end        
 
 [p,e,t]=initmesh(g,'Hmax',inf);
+pdemesh(p,e,t);
+
+
 for i=1:Nlon
     [p,e,t]=refinemesh(g,p,e,t,'longest');
 end    
 for i=1:Nreg
     [p,e,t]=refinemesh(g,p,e,t,'regular');
 end    
+pdemesh(p,e,t);
 
 refinement= 0;
 RelErr= 100;
